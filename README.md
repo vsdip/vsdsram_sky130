@@ -90,9 +90,15 @@
   * Magic
 
 ### Clone OpenRAM Repository
+```
+    git clone https://github.com/VLSIDA/OpenRAM.git
+```
 
 ### Configure Environment Variables
-
+```
+    export OPENRAM_HOME="$(pwd)/compiler"
+    export OPENRAM_TECH="$(pwd)/technology"
+```
 # Custom Cells for OpenRAM
 
 ## 1. 6T SRAM Cell
