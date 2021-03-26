@@ -6,6 +6,7 @@
   Manually configuring the SRAM for every change in parameter seems a slightly in-efficient and tedious task. Due to this reason, the memory compiler is used on a large scale, as it facilitates easy configuration and optimization of memory. OpenRAM, an open-source memory compiler is used for characterization and generation of SRAM designs.
   
 # Table of Contents
+  - [Specifications](#specifications)
   - [Setting Up Environment](#setting-up-environment)
   - [Custom Cells for OpenRAM](#custom-cells-for-openram)
       - [About OpenRAM](#about-openram)
@@ -28,6 +29,56 @@
   - [Acknowledgement](#acknowledgement)
   - [Contact Information](#contact-information)
   
+# Specifications
+  The specifications of a 32Kbits (32 x 1024) SRAM generated using OpenRAM compiler and SKY130 PDKs are mentioned below:
+  
+### Ports and Configuration 
+<table id= "data">
+<thead>
+	<tr><th>Type</th><th>Value</th></tr>
+</thead>
+<tbody>
+	<tr><tr><td>WORD_SIZE</td><td>32</td></tr>
+	<tr><td>NUM_WORDS</td><td>1024</td></tr>
+	<tr><td>NUM_BANKS</td><td>1</td></tr>
+	<tr><td>NUM_RW_PORTS</td><td>1</td></tr>
+	<tr><td>NUM_R_PORTS</td><td>0</td></tr>
+	<tr><td>NUM_W_PORTS</td><td>0</td></tr>
+	<tr><td>Area (&microm<sup>2</sup>)</td><td>534277</td></tr></tr>
+</tbody>
+</table>
+
+### Operating Conditions
+
+<table id= "data">
+<thead>
+	<tr><th>Parameter</th><th>Min</th><th>Typ</th><th>Max</th><th>Units</th></tr>
+</thead>
+<tbody>
+	<tr><tr><td>Power supply (VDD) range</td><td>1.8</td><td>1.8</td><td>1.8</td><td>Volts</td></tr>
+	<tr><td>Operating Temperature</td><td>0</td><td>25</td><td>100</td><td>Celsius</td></tr>
+	<tr><td>Operating Frequency (F)</td><td></td><td></td><td>86</td><td>MHz</td></tr></tr>
+</tbody>
+</table>
+
+### Timing Data (Using analytical model: results may not be precise)
+<table id= "data">
+<thead>
+	<tr><th>Parameter</th><th>Min</th><th>Max</th><th>Units</th></tr>
+</thead>
+<tbody><tr><tr><td>din0[31:0] setup rising</td><td>0.009</td><td>0.009</td><td>ns</td></tr><tr><td>din0[31:0] setup falling</td><td>0.009</td><td>0.009</td><td>ns</td></tr><tr><td>din0[31:0] hold rising</td><td>0.001</td><td>0.001</td><td>ns</td></tr><tr><td>din0[31:0] hold falling</td><td>0.001</td><td>0.001</td><td>ns</td></tr><tr><td>dout0[31:0] cell rise</td><td>-1.968</td><td>3.437</td><td>ns</td></tr><tr><td>dout0[31:0] cell fall</td><td>2.922</td><td>3.125</td><td>ns</td></tr><tr><td>dout0[31:0] rise transition</td><td>0.007</td><td>0.027</td><td>ns</td></tr><tr><td>dout0[31:0] fall transition</td><td>0.007</td><td>0.027</td><td>ns</td></tr><tr><td>csb0 setup rising</td><td>0.009</td><td>0.009</td><td>ns</td></tr><tr><td>csb0 setup falling</td><td>0.009</td><td>0.009</td><td>ns</td></tr><tr><td>csb0 hold rising</td><td>0.001</td><td>0.001</td><td>ns</td></tr><tr><td>csb0 hold falling</td><td>0.001</td><td>0.001</td><td>ns</td></tr><tr><td>addr0[9:0] setup rising</td><td>0.009</td><td>0.009</td><td>ns</td></tr><tr><td>addr0[9:0] setup falling</td><td>0.009</td><td>0.009</td><td>ns</td></tr><tr><td>addr0[9:0] hold rising</td><td>0.001</td><td>0.001</td><td>ns</td></tr><tr><td>addr0[9:0] hold falling</td><td>0.001</td><td>0.001</td><td>ns</td></tr><tr><td>web0 setup rising</td><td>0.009</td><td>0.009</td><td>ns</td></tr><tr><td>web0 setup falling</td><td>0.009</td><td>0.009</td><td>ns</td></tr><tr><td>web0 hold rising</td><td>0.001</td><td>0.001</td><td>ns</td></tr><tr><td>web0 hold falling</td><td>0.001</td><td>0.001</td><td>ns</td></tr></tr></tbody>
+</table>
+
+### Power Data
+<table id= "data">
+<thead>
+	<tr><th>Pins</th><th>Mode</th><th>Power</th><th>Units</th></tr>
+</thead>
+<tbody>
+<tr><tr><td>!csb0 & clk0 & !web0</td><td>Read Rising</td><td>5.8939</td><td>mW</td></tr><tr><td>!csb0 & clk0 & !web0</td><td>Read Falling</td><td>5.8939</td><td>mW</td></tr><tr><td>!csb0 & !clk0 & web0</td><td>Write Rising</td><td>5.8939</td><td>mW</td></tr><tr><td>!csb0 & !clk0 & web0</td><td>Write Falling</td><td>5.8939</td><td>mW</td></tr><tr><td>csb0</td><td>leakage</td><td>0.033462</td><td>mW</td></tr></tr>
+</tbody>
+</table>
+
 # Setting Up Environment
   This repository mentioned multiple open-source circuit schematic design, layout design, SPICE simulations tools and memory compiler. The tools used and their installation is explained in details below. The complete environemnt setup for the open-source OpenLANE RTL2GDS flow can be found [here](https://github.com/ShonTaware/openlane_environment_setup).
   
