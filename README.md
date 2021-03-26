@@ -330,16 +330,6 @@ A template file named `myconfig_sky130.py` is added in the repository. The file 
 
   <img src="OpenRAM/images/sram_1024_32_1.JPG">
 
-# Pre-Layout Schematic and Simulations
-
-
-# Layout and Post-Layout Simulations
-
-## 6T SRAM Cell
-
-  <img src="Postlayout/Layouts/magic_sram_6t_cell_read.JPG">
-  <img src="Postlayout/Simulations/sram_6t_cell_read.JPG">
-
 # OpenRAM Compiler Output Layout
   The Layout for 2 X 16 SRAM cell is show below. The detailed report can be found [here](https://htmlpreview.github.io/?https://github.com/ShonTaware/SRAM_SKY130/blob/main/OpenRAM/results/SRAM_2x16/sram_2_16_sky130A.html)
   <img src="OpenRAM/images/sram_2x16.JPG">
