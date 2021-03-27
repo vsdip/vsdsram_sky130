@@ -101,91 +101,207 @@
 ```
 # Custom Cells for OpenRAM
 
-## 1. 6T SRAM Cell
-  As the name says, 6T SRAM cell consists of 6 MOSFETS - 2 PMOS and 4 NMOS. It is design by cross coupling two CMOS inverters which hold the bit, and two access transistor for enabling the access to the cross coupled inverters. Here, M1, M2 make the first inverter; M3, M4 make the second inverter and M5, M6 are the access transistors.
+## Pre-Layout Schematic and Simulations
+
+### 1. 6T SRAM Cell
+  As the name says, 6T SRAM cell consists of 6 MOSFETS - 2 PMOS and 4 NMOS. It is design by cross coupling two CMOS inverters which hold the bit, and two access transistor for enabling the access to the cross coupled inverters.
 
   <img src="Prelayout/Diagrams/SRAM_Cell_6T.png">
 
-  The figures below shows the schematic and layout of the generic 6T SRAM cell. 
+### Schematic
+  The figure below shows the schematic of the generic 6T SRAM cell. Here, M1, M2 make the first inverter; M3, M4 make the second inverter and M5, M6 are the access transistors.
 
-<table>
-<tr>
-  <td><img src="Prelayout/Schematic/xschem_sram_6t_cell.png"></td>
-</tr>
-<tr>
-  <td><img src="Postlayout/Layouts/layout_6t_sram.JPG"></td>
-</tr>
-</table>
+  <img src="Prelayout/Schematic/xschem_sram_6t_cell.png">
 
-## 2. Pre-charge Circuit
+### Read Operation
+  The read operation is a critical one in SRAM cell. This is becuase, before enabling the access transistors, the bit-lines are first pre-charged to high logic. Depending upon the bit store, one of the bit-line is pulled back to logic low when the access transistors are enabled. 
+
+	$    ngspice Prelayout/Spice_models/SRAM_6T_Cell_read.spice
+
+  <img src="Prelayout/Simulations/sram_cell_6T_read_waveform.JPG">
+
+### Write Operation
+  The bit to be written is first loaded to the bit-line and its inverted bit is loaded on the other bit-line. Once the access transistors are enabled the bit values on bit-lines are over-written on the inverter logic.
+
+	$    ngspice Prelayout/Spice_models/SRAM_6T_Cell_write.spice
+
+  <img src="Prelayout/Simulations/sram_cell_6T_write_waveform.JPG">
+
+### Analyzing Stability of 6T SRAM Cell
+
+* **Static Noise Margin**
+
+  Static noise margin (SNM) is a key figure of merit for an SRAM cell. It can be extracted by nesting the largest possible square in the two voltage transfer curves (VTC) of the two CMOS inverters involved. The SNM is defined as the side-length of the square (i.e. diagonal-length), given in volts. When an external DC noise is larger than the SNM, the state of the SRAM cell can change and data is lost.
+
+1. **Hold SNM**
+
+  <img src="Prelayout/Schematic/xschem_sram_6t_cell_hold_snm.png">
+
+        $    ngspice Prelayout/Spice_models/SRAM_Cell_hold_snm.spice
+
+  <img src="Prelayout/Simulations/sram_cell_6T_hold_snm_waveform.JPG">
+  SNM<sub>high</sub> = 1.0879 V <br />
+  SNM<sub>low</sub> = 1.1112 V <br />
+  Hold SNM = min(SNM<sub>high</sub>, SNM<sub>low</sub>) = 1.0879 V  <br /><br />
+
+2. **Read SNM**
+
+  <img src="Prelayout/Schematic/xschem_sram_6t_cell_read_snm.png">
+
+        $    ngspice Prelayout/Spice_models/SRAM_Cell_read_snm.spice
+
+  <img src="Prelayout/Simulations/sram_cell_6T_read_snm_waveform.JPG">
+  SNM<sub>high</sub> = 0.5511 V <br />
+  SNM<sub>low</sub> = 0.4294 V <br />
+  Read SNM = min(SNM<sub>high</sub>, SNM<sub>low</sub>) =  0.4294 V <br /><br />
+
+3. **Write SNM**
+
+  <img src="Prelayout/Schematic/xschem_sram_6t_cell_write_snm.png">
+
+        $    ngspice Prelayout/Spice_models/SRAM_Cell_write_snm.spice
+
+  <img src="Prelayout/Simulations/sram_cell_6T_write_snm_waveform.JPG">
+  Write SNM = 1.3494 V  <br /><br />
+
+* **N-Curve**
+  N-curve is a metric used for inline testers. It gives information for both voltage and current, and in addition it has no voltage scaling delimiter as found in SNM approach. It also has the complete information about the SRAM stability and also write ability in a single plot. N-curve can be further extended to power metrics in which both the voltage and current information are taken into consideration to provide better stability analysis of the SRAM cell.
+
+  <img src="Prelayout/Schematic/xschem_sram_6t_cell_n_curve.png">
+
+        $    ngspice Prelayout/Spice_models/SRAM_Cell_n_curve.spice
+
+  <img src="Prelayout/Simulations/sram_cell_6T_n_curve_waveform.JPG">
+
+  1. **Static Voltage Noise Margin (SVNM):** It is the voltage difference between point A and B. It indicates the maximum tolerable DC noise voltage of the cell before its content changes.
+  <br /> SVNM = 0.5644 V
+
+  2. **Static Current Noise Margin (SINM):** It is the additional current information provided by the N-curve, namely the peak current located between point A and B. It can also be used to characterize the cell read stability.
+  <br /> SINM = 122.6 uA
+
+  **Note:** For better read stability, SVNM and SINM must be high value.
+
+  3. **Write-Trip Voltage (WTV):** It is the voltage difference between point C and B. It is the voltage drop needed to flip the internal node “1” of the cell with both the bit-lines clamped to VDD.
+  <br /> WTV = 0.9422 V
+  
+  4. **Write-Trip Current (WTI):** It is the negative current peak between point C and B. It is the amount of current needed to write the cell when both bit-lines are kept at VDD.
+  <br /> WTI = -30.869 uA
+
+### 2. Pre-charge Circuit
   This circuit block is used to pre-charge the bit-lines to Vdd or high logic during a read operation.
 
   Shown below is the schematic and simulation of the Pre-charge circuit.
 
-<table>
-<tr>
-  <td><img src="Prelayout/Schematic/xschem_precharge_circuit.png"></td>
-</tr>
-<tr>
-  <td><img src="Postlayout/Layouts/layout_precharge.JPG"></td>
-</tr>
-</table>
+  <img src="Prelayout/Schematic/xschem_precharge_circuit.png">
 
-## 3. Sense Amplifier
+	$    ngspice Prelayout/Spice_models/precharge_circuit.spice
+
+  <img src="Prelayout/Simulations/precharge_circuit_waveform.JPG">
+
+### 3. Sense Amplifier
   Sense Amplifiers in SRAM generally a Differential Voltage Amplifier. They form a very important part of SRAM memory as these amplifiers define the robustness of the bit-lines sensing. The function of sense amplifier is to amplify the very small analog differential voltage between the bit-lines during a read operation and provide a digital output. This effectively reduces the time required for the read operation, as each individual cell need not fully discharge the bit line.
   * if bit > bit_bar, output is 1
   * if bit < bit_bar, output is 0
 
   Shown below is the schematic and simulation of a Sense Amplifier.
 
-<table>
-<tr>
-  <td><img src="Prelayout/Schematic/xschem_sense_amplifier.png"></td>
-</tr>
-<tr>
-  <td><img src="Postlayout/Layouts/layout_sense_amp.JPG"></td>
-</tr>
-</table>
+  <img src="Prelayout/Schematic/xschem_sense_amplifier.png">
 
-## 4. Write Driver
+        $    ngspice Prelayout/Spice_models/sense_amplifier.spice
+
+  <img src="Prelayout/Simulations/sense_amplifier_waveform.JPG">
+
+### 4. Write Driver
   As discussed in read operation, the bit-lines are pre-charged to Vdd during the read operation. If a write operation occurs, one of the bit-lines should driven back to low logic before enabling access transistors. Write drivers are used for this purpose.
 
   Shown below is the schematic and simulation of a Write Driver.
 
-<table>
-<tr>
-  <td><img src="Prelayout/Schematic/xschem_write_driver.png"></td>
-</tr>
-<tr>
-  <td><img src="Postlayout/Layouts/layout_write_driver.JPG"></td>
-</tr>
-</table>
+  <img src="Prelayout/Schematic/xschem_write_driver.png">
 
-## 5. Tri-State Buffer
+      	$    ngspice Prelayout/Spice_models/write_driver.spice
+
+  <img src="Prelayout/Simulations/write_driver_waveform.JPG">
+
+### 5. Tri-State Buffer
   Tri-state buffer is a normal buffer with an extra enable input. Whenever, the enable input is high, tri-state buffer behaves as a normal buffer, otherwise it will either give high impedance or low logic as output.
 
   Shown below is the schematic and simulation of a Tri-State Buffer.
 
-<table>
-<tr>
-  <td><img src="Prelayout/Schematic/xschem_tristate_buffer.png"></td>
-</tr>
-<tr>
-  <td><img src="Postlayout/Layouts/layout_trigate.JPG"></td>
-</tr>
-</table>
+  <img src="Prelayout/Schematic/xschem_tristate_buffer.png">
 
-## 6. D-Flip-Flop
+      	$    ngspice Prelayout/Spice_models/tristate_buffer.spice
+
+  <img src="Prelayout/Simulations/tristate_buffer_waveform.JPG">
+
+### 6. D-Flip-Flop
   Shown below is the schematic and simulation of a Positive Edge triggered D-Flip-Flop.
 
-<table>
-<tr>
-  <td><img src="Prelayout/Schematic/xschem_d_ff.png"></td>
-</tr>
-<tr>
-  <td><img src="Postlayout/Layouts/layout_dff.JPG"></td>
-</tr>
-</table>
+  <img src="Prelayout/Schematic/xschem_d_ff.png">
+
+      	$    ngspice Prelayout/Spice_models/d_ff.spice
+
+  <img src="Prelayout/Simulations/d_ff_waveform.JPG">
+
+### 1-bit SRAM
+  1-bit SRAM comprises of a 6T SRAM cell, a sense amplifier, a write driver and a pre-charge circuit.
+
+  <img src="Prelayout/Diagrams/sram_1bit_block_diagram.jpg">
+
+  * Read Operation
+
+        $    ngspice Prelayout/Spice_models/SRAM_1bit_read.spice
+
+  <img src="Prelayout/Simulations/sram_1bit_cell_read_waveform.JPG">
+
+  * Write Operation
+
+        $    ngspice Prelayout/Spice_models/SRAM_1bit_write.spice
+
+  <img src="Prelayout/Simulations/sram_1bit_cell_write_waveform.JPG">
+
+## Layouts and Postlayout Simulations
+
+ Layouts are created for all custom cells in Magic EDA with sky130A.tech (Technology file), layouts are checked for DRC violations and RC extracted to a postlayout spice netlist. Extracted postlayout spice netlist is backannotated, simlulated to verify and match the response with prelayout simulations.
+ To perform simulations, enter the following command to change present working directory to "postlayout". Follow later mentioned commands to simulate each netlist.
+
+### 1. 6T SRAM Cell
+<img src="Postlayout/Layouts/layout_6t_sram.JPG">
+
+Layout Area: 29.70 um^2 
+
+**-> Read Operation**
+<img src="Postlayout/Simulations/sram_6t_cell_read.png">
+
+**-> Write Operation**
+<img src="Postlayout/Simulations/sram_6t_cell_write.png">
+
+### 2. Sense Amplifier
+<img src="Postlayout/Layouts/layout_sense_amp.JPG">
+
+Layout Area: 30.54 um^2 
+
+<img src="Postlayout/Simulations/sense_amp.png">
+
+### 3. Write Driver
+<img src="Postlayout/Layouts/layout_write_driver.JPG">
+
+Layout Area: 84.89 um^2 
+
+<img src="Postlayout/Simulations/write_ckt.png">
+
+### 4. Tristate Buffer
+<img src="Postlayout/Layouts/layout_trigate.JPG">
+
+Layout Area: 23.18 um^2 
+
+<img src="Postlayout/Simulations/tristatebuffer.png">
+
+### 5. Positive Edge Triggered DFF
+<img src="Postlayout/Layouts/layout_dff.JPG">
+
+Layout Area: 60.25 um^2 
+
+<img src="Postlayout/Simulations/d_flipflop.png">
 
 # OpenRAM Configuration For SkyWater SKY130 PDKs
 The detailed OpenRAM configuration, usage and issues for SKY130 pdk is documented in this section.
