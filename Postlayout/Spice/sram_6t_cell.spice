@@ -1,0 +1,23 @@
+* NGSPICE file created from sram_6t_cell.ext - technology: sky130A
+
+.lib "../../OpenRAM/sky130A/models/sky130.lib.spice" tt
+
+.subckt sram_6t_cell vdd gnd wl bl blb q qb
+X0 qb q vdd vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X1 q qb vdd vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X2 qb q gnd gnd sky130_fd_pr__nfet_01v8 w=1.26e+06u l=150000u
+X3 qb wl blb gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X4 q qb gnd gnd sky130_fd_pr__nfet_01v8 w=1.26e+06u l=150000u
+X5 q wl bl gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+C0 qb q 0.34fF
+C1 blb bl 0.02fF
+C2 blb wl 0.00fF
+C3 vdd q 0.13fF
+C4 vdd qb 0.13fF
+C5 blb qb 0.05fF
+C6 wl bl 0.04fF
+C7 bl q 0.05fF
+C8 wl q 0.01fF
+C9 wl qb 0.00fF
+.ends
+

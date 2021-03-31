@@ -1,0 +1,32 @@
+* NGSPICE file created from tristatebuffer.ext - technology: sky130A
+
+.lib "../../OpenRAM/sky130A/models/sky130.lib.spice" tt
+
+.subckt tristatebuffer in en enb gnd vdd out
+X0 out enb net2 vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X1 out enb gnd gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X2 net2 net1 vdd vdd sky130_fd_pr__pfet_01v8 w=1.26e+06u l=150000u
+X3 out en net2 gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X4 net1 in vdd vdd sky130_fd_pr__pfet_01v8 w=1.26e+06u l=150000u
+X5 net2 net1 gnd gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X6 net1 in gnd gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+C0 out net2 0.24fF
+C1 in enb 0.00fF
+C2 net1 en 0.01fF
+C3 enb net2 0.04fF
+C4 out enb 0.07fF
+C5 net1 vdd 0.28fF
+C6 en net2 0.01fF
+C7 en out 0.00fF
+C8 in vdd 0.01fF
+C9 vdd net2 0.22fF
+C10 net1 in 0.07fF
+C11 out vdd 0.02fF
+C12 net1 net2 0.14fF
+C13 net1 out 0.01fF
+C14 en enb 0.03fF
+C15 enb vdd 0.05fF
+C16 net1 enb 0.02fF
+C17 in net2 0.01fF
+.ends
+

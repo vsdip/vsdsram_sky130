@@ -1,0 +1,49 @@
+* NGSPICE file created from write_driver.ext - technology: sky130A
+
+.lib "../../OpenRAM/sky130A/models/sky130.lib.spice" tt
+
+.subckt write_driver blb bl gnd vdd din wb
+X0 net3 net1 vdd vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X1 net1 din gnd gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X2 net2 net1 gnd gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X3 net4 net3 gnd gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X4 blb net2 gnd gnd sky130_fd_pr__nfet_01v8 w=840000u l=150000u
+X5 net1 din vdd vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X6 net5 net1 vdd vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X7 net2 wb gnd gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X8 net6 net3 vdd vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X9 net4 wb gnd gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X10 bl net4 gnd gnd sky130_fd_pr__nfet_01v8 w=840000u l=150000u
+X11 net3 net1 gnd gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X12 net2 wb net5 vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X13 net4 wb net6 vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+C0 wb net2 0.37fF
+C1 net3 blb 0.14fF
+C2 wb net6 0.00fF
+C3 net1 blb 0.07fF
+C4 net4 net6 0.04fF
+C5 net3 net6 0.01fF
+C6 net1 net2 0.17fF
+C7 bl blb 0.01fF
+C8 net5 net2 0.04fF
+C9 net2 blb 0.05fF
+C10 net6 blb 0.02fF
+C11 vdd net4 0.04fF
+C12 net3 vdd 0.12fF
+C13 net1 vdd 0.21fF
+C14 net5 vdd 0.12fF
+C15 wb din 0.02fF
+C16 wb net4 0.17fF
+C17 vdd net2 0.04fF
+C18 wb net3 0.15fF
+C19 net1 din 0.09fF
+C20 vdd net6 0.12fF
+C21 wb net1 0.33fF
+C22 net3 net4 0.03fF
+C23 net3 net1 0.09fF
+C24 wb blb 0.55fF
+C25 net5 net1 0.06fF
+C26 bl net4 0.05fF
+C27 net4 blb 0.15fF
+.ends
+

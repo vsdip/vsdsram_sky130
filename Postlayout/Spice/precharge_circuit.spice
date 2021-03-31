@@ -1,0 +1,12 @@
+* NGSPICE file created from precharge_circuit.ext - technology: sky130A
+
+.lib "../../OpenRAM/sky130A/models/sky130.lib.spice" tt
+
+.subckt precharge_circuit bl gnd vdd blb
+X0 blb gnd vdd vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X1 bl gnd vdd vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+C0 bl blb 0.01fF
+C1 vdd bl 0.04fF
+C2 vdd blb 0.46fF
+.ends
+

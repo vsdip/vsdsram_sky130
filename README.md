@@ -8,6 +8,12 @@
 # Table of Contents
   - [Specifications](#specifications)
   - [Setting Up Environment](#setting-up-environment)
+  - [OpenRAM Configuration For SkyWater SKY130 PDKs](#openram-configuration-for-skywater-sky130-pdks)
+    - [OpenRAM Directory Structure](#openram-directory-structure)
+    - [Porting SKY130 to OpenRAM](#porting-sky130-to-openram)
+    - [Sample OpenRAM Configurations](#sample-openram-configurations)
+    - [Usage of OpenRAM](#usage-of-openram)
+  - [OpenRAM Compiler Output Layout](#openram-compiler-output-layout)
   - [Custom Cells for OpenRAM](#custom-cells-for-openram)
       1. [6T SRAM Cell](#1-6t-sram-cell)
       2. [Pre-charge Circuit](#2-pre-charge-circuit)
@@ -15,12 +21,6 @@
       4. [Write Driver](#4-write-driver)
       5. [Tri-State Buffer](#5-tri-state-buffer)
       6. [D-Flip-Flop](#6-d-flip-flop)
-  - [OpenRAM Configuration For SkyWater SKY130 PDKs](#openram-configuration-for-skywater-sky130-pdks)
-    - [OpenRAM Directory Structure](#openram-directory-structure)
-    - [Porting SKY130 to OpenRAM](#porting-sky130-to-openram)
-    - [Sample OpenRAM Configurations](#sample-openram-configurations)
-    - [Usage of OpenRAM](#usage-of-openram)
-  - [OpenRAM Compiler Output Layout](#openram-compiler-output-layout)
   - [References](#references)
   - [Acknowledgement](#acknowledgement)
   - [Contact Information](#contact-information)
@@ -99,6 +99,159 @@
     export OPENRAM_HOME="$(pwd)/compiler"
     export OPENRAM_TECH="$(pwd)/technology"
 ```
+
+# OpenRAM Configuration For SkyWater SKY130 PDKs
+The detailed OpenRAM configuration, usage and issues for SKY130 pdk is documented in this section.
+
+## OpenRAM Directory Structure
+  After the installation is properly done. The directory structure of OpenRAM directory looks similar to that of mentioned. 
+  ```
+    ├── OpenRAM 
+    |  ├── compiler
+    |  ├── technologies
+    |     ├── freepdk45  (available with compiler)
+    |     ├── scn4m_subm (available with compiler)
+    |     ├── sky130A 
+
+  ```
+  The `sky130A` directory is not available by default. You need to create it in order to add support for SkyWater PDK Sky130. The detailed contents and their description is explained further in the document. Also, the configure `sky130A` directory is included in the repository for reference. It can be found at [OpenRAM/sky130A/](https://github.com/ShonTaware/SRAM_SKY130/tree/main/OpenRAM/sky130A)
+
+## Porting SKY130 to OpenRAM
+The OpenRAM compiler is currently available for two technologies, namely - SCMOS and FreePDK45.
+For adding a new technology support to OpenRAM, a directory with name of process node should be created in `technology` directory of OpenRAM.
+
+The `technology` directory should contains following information.
+
+  ```
+    ├── technology 
+    |  ├── sky130A
+    |     ├── gds_lib
+    |     ├── sp_lib
+    |     ├── mag_lib (optional)
+    |     ├── models
+    |     ├── layers.map (can be included in another sub-directory)
+    |     ├── tech
+    |        ├── __init__.py
+    |        ├── tech.py
+    |        ├── sky130A.tech
+
+  ```
+
+### `gds_lib` directory
+  This directory contains all the custom premade library cells in `.gds` file format. Following files should be listed in the gds_lib directory:
+  1. dff.gds
+  2. sense_amp.gds
+  3. write_driver.gds
+  4. cell_6t.gds
+  5. replica_cell_6t.gds
+  6. dummy_cell_6t.gds 
+
+### `sp_lib` directory
+This directory contains all the spice netlsits of custom premade library cells in `.sp` file format. 
+
+### `models` directory
+This directory contains all the NMOS and PMOS models for temperatures, voltages and process corners as per requirement. This repository contains the nfet and pfet models for all process corners operating at 1.8 V. 
+
+### `layers.map`
+This file contains the layer description for gds layers. It needs to be generated from the SKY130 PDK document provided by SkyWater. You can find the document [here](https://docs.google.com/spreadsheets/d/1oL6ldkQdLu-4FEQE0lX6BcgbqzYfNnd1XA8vERe0vpE/edit#gid=0).
+  
+The `layers.map` should be organized in a specific syntax. Here, each layer is given on a separate line in below mentioned format:
+
+  ```
+    <layer-name> <purpose-of-layer> <GDS-layer> <GDS-purpose>
+  ```
+The `layers.map` file is added to the repository and can be found [here](https://github.com/ShonTaware/SRAM_SKY130/blob/main/OpenRAM/sky130A/layers.map).  
+
+### `tech/` Directory
+  This directory should contains two mandatory file listed below. Any other optional scripts can also be included if required.
+
+  * `tech/sky130A.tech`
+  * `tech/tech.py`
+
+### `tech/sky130A.tech`
+  This is the technology file provided by SkyWater in the SKY130 PDKs. It needs to copied to this `tech` directory.
+  The `sky130A.tech` technology file is added to the repository.
+
+### `tech/tech.py`
+  This python file contains all the technology related configuration. It contains information about below mentioned paramaters.
+  
+1. Custom modules
+2. Custom cell properties
+3. Layer properties
+4. GDS file information
+5. Interconnect stacks : This defines the contacts and preferred directions of the metal, poly and active diffusion layers.
+6. Power grid
+7. GDS Layer Map
+8. Layer names for external PDKs
+9. DRC/LVS Rules Setup
+10. Technology parameter
+11. Spice Simulation Parameters
+12. Logical Effort relative values for the Handmade cells
+13. Technology Tool Preferences
+
+## Sample OpenRAM Configurations
+  The sample OpenRAM configurations are added to the repository. To use it, copy the `sky130A` directory into the `technology` directory of OpenRAM.
+
+```
+  cp -rf OpenRAM/sky130A $OPENRAM_TECH/
+```
+  * [Sample 2](https://github.com/ShonTaware/SRAM_SKY130/tree/main/OpenRAM/Sample2/sky130A): It modified technology files, mag_lib, sp_lib, gds_lib, tech.py and layers.map files.
+
+## Usage of OpenRAM
+  A configuration file need to be generated in python which contains all parameters required for the compiler. Every parameter mentioned in the configuration file overrides the default value of the parameter. If a parameter is not mentioned in the file, compiler will take a default value.
+  
+A template file named `myconfig_sky130.py` is added in the repository. The file contains parameters as given below.
+
+```
+  # Data word size
+  word_size = 32
+  
+  # Number of words in the memory
+  num_words = 1024
+
+  # Technology to use in $OPENRAM_TECH
+  tech_name = "sky130A"
+  
+  # You can use the technology nominal corner only
+  #nominal_corner_only = True
+  # Or you can specify particular corners
+  # Process corners to characterize
+  process_corners = ["TT"]
+  
+  # Voltage corners to characterize
+  supply_voltages = [ 1.8 ]
+  
+  # Temperature corners to characterize
+  # temperatures = [ 0, 25 100]
+
+  # Output directory for the results
+  output_path = "temp"
+  
+  # Output file base name
+  output_name = "sram_{0}_{1}_{2}".format(word_size,num_words,tech_name)
+
+  # Disable analytical models for full characterization (WARNING: slow!)
+  # analytical_delay = False
+```
+
+  OpenRAM is invoked using the following command
+```
+  python3 $OPENRAM_HOME/openram.py myconfig_sky130
+  
+  or
+  
+  python3 $OPENRAM_HOME/openram.py myconfig_sky130.py
+```
+
+  <img src="OpenRAM/images/sram_1024_32_1.JPG">
+
+# OpenRAM Compiler Output Layout
+  The Layout for 2 X 16 SRAM cell is show below. The detailed report can be found [here](https://htmlpreview.github.io/?https://github.com/ShonTaware/SRAM_SKY130/blob/main/OpenRAM/results/SRAM_2x16/sram_2_16_sky130A.html)
+  <img src="OpenRAM/images/sram_2x16.JPG">
+
+  The Layout for 32 X 1024 SRAM cell is show below. The detailed report can be found [here](https://htmlpreview.github.io/?https://github.com/ShonTaware/SRAM_SKY130/blob/main/OpenRAM/results/SRAM_32x1024/sram_32_1024_sky130A.html)
+  <img src="OpenRAM/images/sram_32x1024.JPG">
+
 # Custom Cells for OpenRAM
 
 ## Pre-Layout Schematic and Simulations
@@ -302,158 +455,6 @@ Layout Area: 23.18 um^2
 Layout Area: 60.25 um^2 
 
 <img src="Postlayout/Simulations/d_flipflop.png">
-
-# OpenRAM Configuration For SkyWater SKY130 PDKs
-The detailed OpenRAM configuration, usage and issues for SKY130 pdk is documented in this section.
-
-## OpenRAM Directory Structure
-  After the installation is properly done. The directory structure of OpenRAM directory looks similar to that of mentioned. 
-  ```
-    ├── OpenRAM 
-    |  ├── compiler
-    |  ├── technologies
-    |     ├── freepdk45  (available with compiler)
-    |     ├── scn4m_subm (available with compiler)
-    |     ├── sky130A 
-
-  ```
-  The `sky130A` directory is not available by default. You need to create it in order to add support for SkyWater PDK Sky130. The detailed contents and their description is explained further in the document. Also, the configure `sky130A` directory is included in the repository for reference. It can be found at [OpenRAM/sky130A/](https://github.com/ShonTaware/SRAM_SKY130/tree/main/OpenRAM/sky130A)
-
-## Porting SKY130 to OpenRAM
-The OpenRAM compiler is currently available for two technologies, namely - SCMOS and FreePDK45.
-For adding a new technology support to OpenRAM, a directory with name of process node should be created in `technology` directory of OpenRAM.
-
-The `technology` directory should contains following information.
-
-  ```
-    ├── technology 
-    |  ├── sky130A
-    |     ├── gds_lib
-    |     ├── sp_lib
-    |     ├── mag_lib (optional)
-    |     ├── models
-    |     ├── layers.map (can be included in another sub-directory)
-    |     ├── tech
-    |        ├── __init__.py
-    |        ├── tech.py
-    |        ├── sky130A.tech
-
-  ```
-
-### `gds_lib` directory
-  This directory contains all the custom premade library cells in `.gds` file format. Following files should be listed in the gds_lib directory:
-  1. dff.gds
-  2. sense_amp.gds
-  3. write_driver.gds
-  4. cell_6t.gds
-  5. replica_cell_6t.gds
-  6. dummy_cell_6t.gds 
-
-### `sp_lib` directory
-This directory contains all the spice netlsits of custom premade library cells in `.sp` file format. 
-
-### `models` directory
-This directory contains all the NMOS and PMOS models for temperatures, voltages and process corners as per requirement. This repository contains the nfet and pfet models for all process corners operating at 1.8 V. 
-
-### `layers.map`
-This file contains the layer description for gds layers. It needs to be generated from the SKY130 PDK document provided by SkyWater. You can find the document [here](https://docs.google.com/spreadsheets/d/1oL6ldkQdLu-4FEQE0lX6BcgbqzYfNnd1XA8vERe0vpE/edit#gid=0).
-  
-The `layers.map` should be organized in a specific syntax. Here, each layer is given on a separate line in below mentioned format:
-
-  ```
-    <layer-name> <purpose-of-layer> <GDS-layer> <GDS-purpose>
-  ```
-The `layers.map` file is added to the repository and can be found [here](https://github.com/ShonTaware/SRAM_SKY130/blob/main/OpenRAM/sky130A/layers.map).  
-
-### `tech/` Directory
-  This directory should contains two mandatory file listed below. Any other optional scripts can also be included if required.
-
-  * `tech/sky130A.tech`
-  * `tech/tech.py`
-
-### `tech/sky130A.tech`
-  This is the technology file provided by SkyWater in the SKY130 PDKs. It needs to copied to this `tech` directory.
-  The `sky130A.tech` technology file is added to the repository.
-
-### `tech/tech.py`
-  This python file contains all the technology related configuration. It contains information about below mentioned paramaters.
-  
-1. Custom modules
-2. Custom cell properties
-3. Layer properties
-4. GDS file information
-5. Interconnect stacks : This defines the contacts and preferred directions of the metal, poly and active diffusion layers.
-6. Power grid
-7. GDS Layer Map
-8. Layer names for external PDKs
-9. DRC/LVS Rules Setup
-10. Technology parameter
-11. Spice Simulation Parameters
-12. Logical Effort relative values for the Handmade cells
-13. Technology Tool Preferences
-
-## Sample OpenRAM Configurations
-  The sample OpenRAM configurations are added to the repository. To use it, copy the `sky130A` directory into the `technology` directory of OpenRAM.
-
-```
-  cp -rf OpenRAM/sky130A $OPENRAM_TECH/
-```
-  * [Sample 2](https://github.com/ShonTaware/SRAM_SKY130/tree/main/OpenRAM/Sample2/sky130A): It modified technology files, mag_lib, sp_lib, gds_lib, tech.py and layers.map files.
-
-## Usage of OpenRAM
-  A configuration file need to be generated in python which contains all parameters required for the compiler. Every parameter mentioned in the configuration file overrides the default value of the parameter. If a parameter is not mentioned in the file, compiler will take a default value.
-  
-A template file named `myconfig_sky130.py` is added in the repository. The file contains parameters as given below.
-
-```
-  # Data word size
-  word_size = 32
-  
-  # Number of words in the memory
-  num_words = 1024
-
-  # Technology to use in $OPENRAM_TECH
-  tech_name = "sky130A"
-  
-  # You can use the technology nominal corner only
-  #nominal_corner_only = True
-  # Or you can specify particular corners
-  # Process corners to characterize
-  process_corners = ["TT"]
-  
-  # Voltage corners to characterize
-  supply_voltages = [ 1.8 ]
-  
-  # Temperature corners to characterize
-  # temperatures = [ 0, 25 100]
-
-  # Output directory for the results
-  output_path = "temp"
-  
-  # Output file base name
-  output_name = "sram_{0}_{1}_{2}".format(word_size,num_words,tech_name)
-
-  # Disable analytical models for full characterization (WARNING: slow!)
-  # analytical_delay = False
-```
-
-  OpenRAM is invoked using the following command
-```
-  python3 $OPENRAM_HOME/openram.py myconfig_sky130
-  
-  or
-  
-  python3 $OPENRAM_HOME/openram.py myconfig_sky130.py
-```
-
-  <img src="OpenRAM/images/sram_1024_32_1.JPG">
-
-# OpenRAM Compiler Output Layout
-  The Layout for 2 X 16 SRAM cell is show below. The detailed report can be found [here](https://htmlpreview.github.io/?https://github.com/ShonTaware/SRAM_SKY130/blob/main/OpenRAM/results/SRAM_2x16/sram_2_16_sky130A.html)
-  <img src="OpenRAM/images/sram_2x16.JPG">
-
-  The Layout for 32 X 1024 SRAM cell is show below. The detailed report can be found [here](https://htmlpreview.github.io/?https://github.com/ShonTaware/SRAM_SKY130/blob/main/OpenRAM/results/SRAM_32x1024/sram_32_1024_sky130A.html)
-  <img src="OpenRAM/images/sram_32x1024.JPG">
 
 # References
   - VLSI System Design: https://www.vlsisystemdesign.com/

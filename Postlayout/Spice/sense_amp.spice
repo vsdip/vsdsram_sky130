@@ -1,0 +1,34 @@
+* NGSPICE file created from sense_amp.ext - technology: sky130A
+
+.lib "../../OpenRAM/sky130A/models/sky130.lib.spice" tt
+
+.subckt sense_amp vdd gnd blb bl rd_en dout
+X0 net3 net1 vdd vdd sky130_fd_pr__pfet_01v8 w=1e+06u l=150000u
+X1 dout net3 vdd vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X2 net1 net1 vdd vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X3 net1 blb net2 gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X4 gnd rd_en net2 gnd sky130_fd_pr__nfet_01v8 w=1e+06u l=150000u
+X5 net3 bl net2 gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X6 dout net3 gnd gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+C0 bl blb 0.02fF
+C1 dout net2 0.03fF
+C2 rd_en net2 0.01fF
+C3 net2 net1 0.23fF
+C4 rd_en dout 0.02fF
+C5 net2 net3 0.35fF
+C6 dout net3 0.02fF
+C7 rd_en net3 0.11fF
+C8 net2 bl 0.09fF
+C9 net3 net1 0.07fF
+C10 net2 blb 0.08fF
+C11 rd_en bl 0.00fF
+C12 net1 bl 0.08fF
+C13 vdd net2 0.02fF
+C14 net3 bl 0.01fF
+C15 net1 blb 0.02fF
+C16 dout vdd 0.05fF
+C17 rd_en vdd 0.00fF
+C18 vdd net1 0.07fF
+C19 vdd net3 0.19fF
+.ends
+

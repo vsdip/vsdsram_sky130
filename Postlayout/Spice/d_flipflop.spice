@@ -1,0 +1,59 @@
+* NGSPICE file created from d_flipflop.ext - technology: sky130A
+
+.lib "../../OpenRAM/sky130A/models/sky130.lib.spice" tt
+
+.subckt d_flipflop vdd gnd D Q clk
+X0 net4 clk net3 gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X1 net1 clk D vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X2 gnd Q net5 gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X3 net1 clkb D gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X4 net2 clk net1 gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X5 vdd net3 net2 vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X6 gnd net3 net2 gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X7 net5 clk net4 vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X8 Q net4 vdd vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X9 net2 clkb net1 vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X10 net4 clkb net3 vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X11 net5 clkb net4 gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X12 net3 net1 gnd gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X13 vdd Q net5 vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X14 clkb clk gnd gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X15 net3 net1 vdd vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+X16 Q net4 gnd gnd sky130_fd_pr__nfet_01v8 w=420000u l=150000u
+X17 clkb clk vdd vdd sky130_fd_pr__pfet_01v8 w=550000u l=150000u
+C0 D clkb 0.30fF
+C1 D clk 0.05fF
+C2 Q vdd 0.08fF
+C3 net5 net4 0.18fF
+C4 net4 clkb 0.11fF
+C5 clk net4 0.18fF
+C6 D vdd 0.03fF
+C7 net2 D 0.05fF
+C8 net5 clkb 0.06fF
+C9 D net1 0.10fF
+C10 net5 clk 0.06fF
+C11 clk clkb 1.35fF
+C12 net4 vdd 0.02fF
+C13 net3 net4 0.03fF
+C14 net5 vdd 0.10fF
+C15 net5 net3 0.01fF
+C16 vdd clkb 0.26fF
+C17 net2 clkb 0.10fF
+C18 net3 clkb 0.30fF
+C19 clk vdd 0.19fF
+C20 net2 clk 0.10fF
+C21 net1 clkb 0.41fF
+C22 net3 clk 0.10fF
+C23 net1 clk 0.49fF
+C24 Q net4 0.20fF
+C25 net5 Q 0.02fF
+C26 net2 vdd 0.10fF
+C27 net3 vdd 0.19fF
+C28 net2 net3 0.03fF
+C29 net1 vdd 0.02fF
+C30 Q clkb 0.02fF
+C31 net2 net1 0.18fF
+C32 net3 net1 0.19fF
+C33 Q clk 0.01fF
+.ends
+
