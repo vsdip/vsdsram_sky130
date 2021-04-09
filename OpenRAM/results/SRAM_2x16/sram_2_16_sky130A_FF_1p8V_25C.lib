@@ -81,7 +81,7 @@ cell (sram_2_16_sky130A){
     dont_use  : true;
     map_only   : true;
     dont_touch : true;
-    area : 7915.0296;
+    area : 9316.992000000002;
 
     pg_pin(vdd) {
          voltage_name : VDD;
@@ -283,37 +283,37 @@ cell (sram_2_16_sky130A){
         internal_power(){
             when : "!csb0 & !web0"; 
             rise_power(scalar){
-                values("1.026865e+00");
+                values("1.027006e+00");
             }
             fall_power(scalar){
-                values("1.026865e+00");
+                values("1.027006e+00");
             }
         }
         internal_power(){
             when : "csb0 & !web0"; 
             rise_power(scalar){
-                values("1.026865e+00");
+                values("1.027006e+00");
             }
             fall_power(scalar){
-                values("1.026865e+00");
+                values("1.027006e+00");
             }
         }
         internal_power(){
             when : "!csb0 & web0"; 
             rise_power(scalar){
-                values("1.026865e+00");
+                values("1.027006e+00");
             }
             fall_power(scalar){
-                values("1.026865e+00");
+                values("1.027006e+00");
             }
         }
         internal_power(){
             when : "csb0 & web0"; 
             rise_power(scalar){
-                values("1.026865e+00");
+                values("1.027006e+00");
             }
             fall_power(scalar){
-                values("1.026865e+00");
+                values("1.027006e+00");
             }
         }
         timing(){ 

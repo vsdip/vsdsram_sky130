@@ -953,9 +953,9 @@ Mpnand2_nmos1 Z B net1 gnd sky130_fd_pr__nfet_01v8 m=1 w=0.84u l=0.15u pd=1.98u 
 Mpnand2_nmos2 net1 A gnd gnd sky130_fd_pr__nfet_01v8 m=1 w=0.84u l=0.15u pd=1.98u ps=1.98u as=0.32p ad=0.32p
 .ENDS pnand2_0
 
-* spice ptx M{0} {1} sky130_fd_pr__nfet_01v8 m=9 w=0.56u l=0.15u pd=1.42u ps=1.42u as=0.21p ad=0.21p
+* spice ptx M{0} {1} sky130_fd_pr__nfet_01v8 m=7 w=0.72u l=0.15u pd=1.74u ps=1.74u as=0.27p ad=0.27p
 
-* spice ptx M{0} {1} sky130_fd_pr__nfet_01v8 m=9 w=1.12u l=0.15u pd=2.54u ps=2.54u as=0.42p ad=0.42p
+* spice ptx M{0} {1} sky130_fd_pr__nfet_01v8 m=7 w=1.44u l=0.15u pd=3.18u ps=3.18u as=0.54p ad=0.54p
 
 .SUBCKT pinv_2 A Z vdd gnd
 *.PININFO A:I Z:O vdd:B gnd:B
@@ -963,8 +963,8 @@ Mpnand2_nmos2 net1 A gnd gnd sky130_fd_pr__nfet_01v8 m=1 w=0.84u l=0.15u pd=1.98
 * OUTPUT: Z 
 * POWER : vdd 
 * GROUND: gnd 
-Mpinv_pmos Z A vdd vdd sky130_fd_pr__nfet_01v8 m=9 w=1.12u l=0.15u pd=2.54u ps=2.54u as=0.42p ad=0.42p
-Mpinv_nmos Z A gnd gnd sky130_fd_pr__nfet_01v8 m=9 w=0.56u l=0.15u pd=1.42u ps=1.42u as=0.21p ad=0.21p
+Mpinv_pmos Z A vdd vdd sky130_fd_pr__nfet_01v8 m=7 w=1.44u l=0.15u pd=3.18u ps=3.18u as=0.54p ad=0.54p
+Mpinv_nmos Z A gnd gnd sky130_fd_pr__nfet_01v8 m=7 w=0.72u l=0.15u pd=1.74u ps=1.74u as=0.27p ad=0.27p
 .ENDS pinv_2
 
 .SUBCKT pdriver A Z vdd gnd
@@ -1028,9 +1028,9 @@ Mpinv_pmos Z A vdd vdd sky130_fd_pr__nfet_01v8 m=1 w=0.84u l=0.15u pd=1.98u ps=1
 Mpinv_nmos Z A gnd gnd sky130_fd_pr__nfet_01v8 m=1 w=0.42u l=0.15u pd=1.14u ps=1.14u as=0.16p ad=0.16p
 .ENDS pinv_5
 
-* spice ptx M{0} {1} sky130_fd_pr__nfet_01v8 m=4 w=0.52u l=0.15u pd=1.34u ps=1.34u as=0.20p ad=0.20p
+* spice ptx M{0} {1} sky130_fd_pr__nfet_01v8 m=3 w=0.7000000000000001u l=0.15u pd=1.70u ps=1.70u as=0.26p ad=0.26p
 
-* spice ptx M{0} {1} sky130_fd_pr__nfet_01v8 m=4 w=1.05u l=0.15u pd=2.40u ps=2.40u as=0.39p ad=0.39p
+* spice ptx M{0} {1} sky130_fd_pr__nfet_01v8 m=3 w=1.4000000000000001u l=0.15u pd=3.10u ps=3.10u as=0.53p ad=0.53p
 
 .SUBCKT pinv_6 A Z vdd gnd
 *.PININFO A:I Z:O vdd:B gnd:B
@@ -1038,13 +1038,13 @@ Mpinv_nmos Z A gnd gnd sky130_fd_pr__nfet_01v8 m=1 w=0.42u l=0.15u pd=1.14u ps=1
 * OUTPUT: Z 
 * POWER : vdd 
 * GROUND: gnd 
-Mpinv_pmos Z A vdd vdd sky130_fd_pr__nfet_01v8 m=4 w=1.05u l=0.15u pd=2.40u ps=2.40u as=0.39p ad=0.39p
-Mpinv_nmos Z A gnd gnd sky130_fd_pr__nfet_01v8 m=4 w=0.52u l=0.15u pd=1.34u ps=1.34u as=0.20p ad=0.20p
+Mpinv_pmos Z A vdd vdd sky130_fd_pr__nfet_01v8 m=3 w=1.4000000000000001u l=0.15u pd=3.10u ps=3.10u as=0.53p ad=0.53p
+Mpinv_nmos Z A gnd gnd sky130_fd_pr__nfet_01v8 m=3 w=0.7000000000000001u l=0.15u pd=1.70u ps=1.70u as=0.26p ad=0.26p
 .ENDS pinv_6
 
-* spice ptx M{0} {1} sky130_fd_pr__nfet_01v8 m=11 w=0.5700000000000001u l=0.15u pd=1.44u ps=1.44u as=0.21p ad=0.21p
+* spice ptx M{0} {1} sky130_fd_pr__nfet_01v8 m=9 w=0.7000000000000001u l=0.15u pd=1.70u ps=1.70u as=0.26p ad=0.26p
 
-* spice ptx M{0} {1} sky130_fd_pr__nfet_01v8 m=11 w=1.1500000000000001u l=0.15u pd=2.60u ps=2.60u as=0.43p ad=0.43p
+* spice ptx M{0} {1} sky130_fd_pr__nfet_01v8 m=9 w=1.4000000000000001u l=0.15u pd=3.10u ps=3.10u as=0.53p ad=0.53p
 
 .SUBCKT pinv_7 A Z vdd gnd
 *.PININFO A:I Z:O vdd:B gnd:B
@@ -1052,8 +1052,8 @@ Mpinv_nmos Z A gnd gnd sky130_fd_pr__nfet_01v8 m=4 w=0.52u l=0.15u pd=1.34u ps=1
 * OUTPUT: Z 
 * POWER : vdd 
 * GROUND: gnd 
-Mpinv_pmos Z A vdd vdd sky130_fd_pr__nfet_01v8 m=11 w=1.1500000000000001u l=0.15u pd=2.60u ps=2.60u as=0.43p ad=0.43p
-Mpinv_nmos Z A gnd gnd sky130_fd_pr__nfet_01v8 m=11 w=0.5700000000000001u l=0.15u pd=1.44u ps=1.44u as=0.21p ad=0.21p
+Mpinv_pmos Z A vdd vdd sky130_fd_pr__nfet_01v8 m=9 w=1.4000000000000001u l=0.15u pd=3.10u ps=3.10u as=0.53p ad=0.53p
+Mpinv_nmos Z A gnd gnd sky130_fd_pr__nfet_01v8 m=9 w=0.7000000000000001u l=0.15u pd=1.70u ps=1.70u as=0.26p ad=0.26p
 .ENDS pinv_7
 
 .SUBCKT pdriver_0 A Z vdd gnd
@@ -1108,9 +1108,9 @@ Mpnand3_nmos2 net1 B net2 gnd sky130_fd_pr__nfet_01v8 m=1 w=0.84u l=0.15u pd=1.9
 Mpnand3_nmos3 net2 A gnd gnd sky130_fd_pr__nfet_01v8 m=1 w=0.84u l=0.15u pd=1.98u ps=1.98u as=0.32p ad=0.32p
 .ENDS pnand3_0
 
-* spice ptx M{0} {1} sky130_fd_pr__nfet_01v8 m=7 w=0.6u l=0.15u pd=1.50u ps=1.50u as=0.22p ad=0.22p
+* spice ptx M{0} {1} sky130_fd_pr__nfet_01v8 m=6 w=0.7000000000000001u l=0.15u pd=1.70u ps=1.70u as=0.26p ad=0.26p
 
-* spice ptx M{0} {1} sky130_fd_pr__nfet_01v8 m=7 w=1.2u l=0.15u pd=2.70u ps=2.70u as=0.45p ad=0.45p
+* spice ptx M{0} {1} sky130_fd_pr__nfet_01v8 m=6 w=1.4000000000000001u l=0.15u pd=3.10u ps=3.10u as=0.53p ad=0.53p
 
 .SUBCKT pinv_9 A Z vdd gnd
 *.PININFO A:I Z:O vdd:B gnd:B
@@ -1118,8 +1118,8 @@ Mpnand3_nmos3 net2 A gnd gnd sky130_fd_pr__nfet_01v8 m=1 w=0.84u l=0.15u pd=1.98
 * OUTPUT: Z 
 * POWER : vdd 
 * GROUND: gnd 
-Mpinv_pmos Z A vdd vdd sky130_fd_pr__nfet_01v8 m=7 w=1.2u l=0.15u pd=2.70u ps=2.70u as=0.45p ad=0.45p
-Mpinv_nmos Z A gnd gnd sky130_fd_pr__nfet_01v8 m=7 w=0.6u l=0.15u pd=1.50u ps=1.50u as=0.22p ad=0.22p
+Mpinv_pmos Z A vdd vdd sky130_fd_pr__nfet_01v8 m=6 w=1.4000000000000001u l=0.15u pd=3.10u ps=3.10u as=0.53p ad=0.53p
+Mpinv_nmos Z A gnd gnd sky130_fd_pr__nfet_01v8 m=6 w=0.7000000000000001u l=0.15u pd=1.70u ps=1.70u as=0.26p ad=0.26p
 .ENDS pinv_9
 
 .SUBCKT pdriver_2 A Z vdd gnd

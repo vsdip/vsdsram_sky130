@@ -88,7 +88,7 @@ power_grid = m3_stack
 # create the GDS layer map
 layer={}
 layer["active"]         = (65, 20)
-layer["active_contact"] = (65, 44)
+layer["active_contact"] = (66, 44)
 layer["tap"]            = (65, 44)
 layer["nwell"]          = (64, 20)
 layer["poly"]           = (66, 20)
@@ -108,6 +108,7 @@ layer["m4"]             = (71, 20)
 layer["via4"]           = (71, 44)
 layer["m5"]             = (72, 20)
 layer["boundary"]       = (235, 4)
+layer["text"]           = (83, 44)
 
 # Layer names for external PDKs
 layer_names = {}
@@ -132,30 +133,30 @@ layer_names["m4"]             = "m4"
 layer_names["via4"]           = "via4"
 layer_names["m5"]             = "m5"
 layer_names["boundary"]       = "boundary"
+layer_names["text"]           = "text"
 
 ###################################################
 # DRC/LVS Rules Setup
 ###################################################
-_lambda_ = 1
+_lambda_ = 0.01
 
 
 #technology parameter
 parameter={}
-parameter["min_tx_size"] = 0.42
+parameter["min_tx_size"] = 42 * _lambda_
 parameter["beta"] = 2
 
 # These 6T sizes are used in the parameterized bitcell.
-parameter["6T_inv_nmos_size"] = 1.26
-parameter["6T_inv_pmos_size"] = 0.55
-parameter["6T_access_size"] = 0.42
-
+parameter["6T_inv_nmos_size"] = 42 * _lambda_
+parameter["6T_inv_pmos_size"] = 55 * _lambda_
+parameter["6T_access_size"] = 42 * _lambda_
 
 drclvs_home=os.environ.get("DRCLVS_HOME")
 
 drc = design_rules("sky130A")
 
 #grid size 
-drc["grid"]=0.01
+drc["grid"] = _lambda_
 
 #DRC/LVS test set_up
 drc["drc_rules"] = None 
@@ -163,8 +164,8 @@ drc["lvs_rules"] = None
 drc["layer_map"] = os.environ.get("OPENRAM_TECH")+"/sky130A/tf/layers.map"
 
 # minwidth_tx with contact
-drc["minwidth_tx"] = 0.42
-drc["minlength_channel"] = 0.35
+drc["minwidth_tx"] = 42 * _lambda_
+drc["minlength_channel"] = 50 * _lambda_
 
 # Minimum spacing between wells of different type (if both are drawn)
 drc["pwell_to_nwell"] = 0
@@ -172,65 +173,60 @@ drc["pwell_to_nwell"] = 0
 # Minimum spacing between wells of same type (if both are drawn)
 # Minimum width
 drc.add_layer("nwell",
-              width = 0.84,
-              spacing = 1.27)
-
-drc.add_layer("pwell",
-              width = 0.84,
-              spacing = 1.27)
+              width = 84 * _lambda_,
+              spacing = 127 * _lambda_)
               
 # Minimum width li_contact (MCON)
-drc["minwidth_li_contact"] = 0.17
+drc["minwidth_li_contact"] = 17 * _lambda_
 
 # Local Interconnect
 drc.add_layer("li",
-              width = 0.17,
-              spacing = 0.17)
+              width = 29 * _lambda_,
+              spacing = 20 * _lambda_) # O - 17
+#drc["minarea_li"] = 5610 * _lambda_              
 
 drc.add_enclosure("li",
                   layer = "li_contact",
-                  enclosure = 0)
+                  enclosure = 8 * _lambda_)
+
 drc.add_enclosure("m1",
                   layer = "li_contact",
-                  enclosure = 0.06)
+                  enclosure = 6 * _lambda_)
                   
-drc["li_contact_to_li_contact"] = 0.19
-
+drc["li_contact_to_li_contact"] = 17 * _lambda_
 
 # POLY
 drc.add_layer("poly",
-              width = 0.15,
-              spacing = 0.21)
+              width = 15 * _lambda_,
+              spacing = 21 * _lambda_)
               
 drc.add_enclosure("li",
                   layer = "poly_contact",
-                  enclosure = 0.08)
+                  enclosure = 8 * _lambda_)
 
 # Minimum gate extension of active
-drc["poly_extend_active"] = 0.21 #########################
+drc["poly_extend_active"] = 21 * _lambda_
 
 # Minimum spacing between poly contact and other poly (alternative rules)
-drc["poly_to_poly_contact"] = 0.21
+drc["poly_to_poly_contact"] = 21 * _lambda_
 
 # ??
-drc["active_enclose_gate"] = 0.19 ############### Confirm value | Added temporary value
+drc["active_enclose_gate"] = 19 * _lambda_ ############### Confirm value | Added temporary value
 
 # Minimum field poly to active
-drc["poly_to_active"] = 0.075
+drc["poly_to_active"] = 7.5 * _lambda_
 
 # Active (DIFF)
 drc.add_layer("active",
-              width = 0.27,
-              spacing = 0.27)
+              width = 42 * _lambda_,
+              spacing = 27 * _lambda_)
 
 # Source/drain active to well edge
 drc.add_enclosure("nwell",
                   layer = "active",
-                  enclosure = 1.27)
-'''drc.add_enclosure("pwell",
-                  layer = "active",
-                  enclosure = 0.4)
-'''
+                  enclosure = 127 * _lambda_)
+
+
 
 # Minimum select spacing to channel of transistor to ensure adequate source/drain width
 drc["implant_to_channel"] = 0 ############### Confirm value | Added temporary value
@@ -238,12 +234,12 @@ drc["implant_to_channel"] = 0 ############### Confirm value | Added temporary va
 # Minimum select overlap of active
 drc.add_enclosure("implant",
                   layer = "active",
-                  enclosure = 0.4)
+                  enclosure = 40 * _lambda_) ############### Confirm value | Added temporary value
 
 # Minimum select overlap of contact
 drc.add_enclosure("implant",
                   layer = "active_contact",
-                  enclosure = 0.18) ############### Confirm value | Added temporary value
+                  enclosure = 18 * _lambda_) ############### Confirm value | Added temporary value
 # Not a rule
 drc["implant_to_contact"] = 0
 # Not a rule
@@ -253,115 +249,118 @@ drc.add_layer("implant",
 
 # Active Contact (TAP)
 drc.add_layer("active_contact",
-              width = 0.17,
-              spacing = 0.17)
+              width = 17 * _lambda_,
+              spacing = 17 * _lambda_)
+              
+#drc["tap_to_active"] = 0.30              
+#drc["tap_to_li"] = 0.30              
 
 # Minimum active overlap
 drc.add_enclosure("active",
                   layer = "active_contact",
-                  enclosure = 0.06) ############### Confirm value | Added temporary value
+                  enclosure = 6 * _lambda_) ############### Confirm value | Added temporary value
 
 drc.add_enclosure("active",
                   layer = "poly_contact",
-                  enclosure = 0.19)
+                  enclosure = 19 * _lambda_)
 
 # Reserved for other technologies
-drc["active_contact_to_gate"] = 0.055 ############### Confirm value | Added temporary value
+drc["active_contact_to_gate"] = 5.5 * _lambda_ ############### Confirm value | Added temporary value
 # 5.4 Minimum spacing to gate of transistor
-drc["poly_contact_to_gate"] = 0.19
+drc["poly_contact_to_gate"] = 5.5 * _lambda_ ############### Confirm value | Added temporary value
 
 # 6.1 Exact contact size
 # 5.3 Minimum contact spacing
 drc.add_layer("poly_contact",
-              width = 0.17,
-              spacing = 0.17)
-drc["minwidth_poly_contact"] = 0.17    
-drc["minwidth_via1"] = 0.26    
-drc["via1_to_via1"] = 0.06    
-
+              width = 17 * _lambda_,
+              spacing = 17 * _lambda_)
+              
 drc.add_enclosure("npc",
                   layer = "poly",
-                  enclosure = 0.05) ######## Confirm value | Added temporary value
+                  enclosure = 5 * _lambda_) ######## Confirm value | Added temporary value
 
 # 8.3 Minimum overlap by m1
 drc.add_enclosure("m1",
                   layer = "via1",
-                  enclosure = 0.1)
+                  enclosure = 10 * _lambda_)
 
               
 # 5.2.b Minimum poly overlap
 drc.add_enclosure("poly",
                   layer = "poly_contact",
-                  enclosure = 0.2)
+                  enclosure = 8 * _lambda_)
 
 # 7.1 Minimum width
 # 7.2 Minimum spacing
 drc.add_layer("m1",
-              width = 0.14,
-              spacing = 0.14)
+              width = 14 * _lambda_,
+              spacing = 14 * _lambda_)
+              
 # 7.3 Minimum overlap of any contact
 drc.add_enclosure("li",
                   layer = "active_contact",
-                  enclosure = 0.08) ######## Confirm value | Added temporary value
+                  enclosure = 8 * _lambda_) ######## Confirm value | Added temporary value
 
 # 8.1 Exact size
 # 8.2 Minimum via spacing
 drc.add_layer("via1",
-              width = 0.26,
-              spacing = 0.03)
+              width = 26 * _lambda_,
+              spacing = 6 * _lambda_)
 
 # 9.1 Minimum width
 # 9.2 Minimum spacing
 drc.add_layer("m2",
-              width = 0.14,
-              spacing = 0.14)
+              width = 14 * _lambda_,
+              spacing = 14 * _lambda_)
+              
 # 9.3 Minimum overlap of via
 drc.add_enclosure("m2",
                   layer = "via1",
-                  enclosure = 0.1)
+                  enclosure = 10 * _lambda_)
+                  
 # 14.3 Minimum overlap by m2
 drc.add_enclosure("m2",
                   layer = "via2",
-                  enclosure = 0.12)
+                  enclosure = 9 * _lambda_)
 
 # 14.1 Exact size
 # 14.2 Minimum spacing
 drc.add_layer("via2",
-              width = 0.28,
-              spacing = 0.12)
+              width = 28 * _lambda_,
+              spacing = 12 * _lambda_)
 
 # 15.1 Minimum width
 # 15.2 Minimum spacing to m3
 drc.add_layer("m3",
-              width = 0.30,
-              spacing = 0.30)
+              width = 30 * _lambda_,
+              spacing = 45 * _lambda_) #O - 30
 
 # 15.3 Minimum overlap of via 2
 drc.add_enclosure("m3",
                   layer = "via2",
-                  enclosure = 0.08)
+                  enclosure = 8 * _lambda_)
 
 # 21.3 Minimum overlap by m3
 drc.add_enclosure("m3",
                   layer = "via3",
-                  enclosure = 0.1)
+                  enclosure = 7 * _lambda_)
 
 # 21.1 Exact size
 # 21.2 Minimum spacing
 drc.add_layer("via3",
-              width = 0.32,
-              spacing = 0.08)
+              width = 32 * _lambda_,
+              spacing = 14 * _lambda_)
 
 # 22.1 Minimum width
 # 22.2 Minimum spacing to m4
 drc.add_layer("m4",
-              width = 0.30,
-              spacing = 0.30)
+              width = 30 * _lambda_,
+              spacing = 30 * _lambda_)
 
 # 22.3 Minimum overlap of via 3
 drc.add_enclosure("m4",
                   layer = "via3",
-                  enclosure = 0.025)
+                  enclosure = 21 * _lambda_)
 
 ###################################################
 # Spice Simulation Parameters
@@ -423,10 +422,10 @@ parameter["min_inv_para_delay"] = 2.07       # In relative delay units
 parameter["cap_relative_per_ff"] = .91       # Units of Relative Capacitance/ Femto-Farad
 parameter["dff_clk_cin"] = 27.5              # In relative capacitance units
 parameter["6tcell_wl_cin"] = 2               # In relative capacitance units
-parameter["sa_en_pmos_size"] = 1
-parameter["sa_en_nmos_size"] = 1
-parameter["sa_inv_pmos_size"] = 0.55
-parameter["sa_inv_nmos_size"] = 0.42
+parameter["sa_en_pmos_size"] = 110 * _lambda_
+parameter["sa_en_nmos_size"] = 84 * _lambda_
+parameter["sa_inv_pmos_size"] = 55 * _lambda_
+parameter["sa_inv_nmos_size"] = 42 * _lambda_
 parameter["bitcell_drain_cap"] = 0.2        # In Femto-Farad, approximation of drain capacitance
 
 ###################################################

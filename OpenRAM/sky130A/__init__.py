@@ -11,13 +11,6 @@ import os
 
 TECHNOLOGY = "sky130A"
 
-
-##########################
-# CDK paths
-
-# os.environ["CDK_DIR"] = CDK_DIR #PDK path
-# os.environ["SYSTEM_CDS_LIB_DIR"] = "{0}/cdssetup".format(CDK_DIR)
-# os.environ["CDS_SITE"] = CDK_DIR
 os.environ["MGC_TMPDIR"] = "/tmp"
 
 ###########################
