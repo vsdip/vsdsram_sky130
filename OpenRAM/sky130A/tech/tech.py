@@ -369,7 +369,7 @@ drc.add_enclosure("m4",
 # spice model info
 spice={}
 spice["nmos"]="sky130_fd_pr__nfet_01v8"
-spice["pmos"]="sky130_fd_pr__nfet_01v8"
+spice["pmos"]="sky130_fd_pr__pfet_01v8"
 # This is a map of corners to model files
 SPICE_MODEL_DIR=os.environ.get("SPICE_MODEL_DIR")
 spice["fet_models"] = {"TT": [SPICE_MODEL_DIR + "/tt.sp"],
